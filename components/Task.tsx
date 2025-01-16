@@ -1,6 +1,26 @@
-import React from "react";
+"use client"
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+interface Task{
+  _id: string,
+  title: string,
+  description: string,
+  status: boolean,
+}
 
 const Task = () => {
+  const [data, setData] = useState<Task[]>([])
+
+  async function handleGetTasks(){
+    await axios.get("./api/get").then((res)=>{
+      setData(res.data.tasks)
+    })
+  }
+
+  useEffect(()=> {
+    handleGetTasks()
+  }, [])
   return (
     <div>
       <div className="relative overflow-x-auto w-[750px] mx-auto my-10">
@@ -22,18 +42,19 @@ const Task = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            {data.map((item)=>(
+              <tr key={item._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
               <th
                 scope="row"
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                Drink Water
+                {item.title}
               </th>
               <td className="px-6 py-4">
-                3 Glasses
+                {item.description}
               </td>
               <td className="px-6 py-4">
-                Not Done
+                <p className={`text-center px-2 py-1 rounded-full ${item.status ? "bg-green-500 text-white" : "bg-[#a6a6a6] text-black"}`}>{item.status ? "Done" : "Not Done"}</p>
               </td>
               <td className="px-6 py-4 flex gap-3">
                 <button className="bg-red-500 rounded-sm text-white px-2 py-1">Delete</button>
@@ -41,7 +62,7 @@ const Task = () => {
                 <button className="bg-green-500 rounded-sm text-white px-2 py-1">Marks as Done</button>
               </td>
             </tr>
-            
+            ))}
           </tbody>
         </table>
       </div>
