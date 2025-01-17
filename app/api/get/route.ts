@@ -1,6 +1,8 @@
+import { connectDB } from "@/lib/connectDb";
 import { Task } from "@/lib/models/Task";
 
 export async function GET() {
+    await connectDB()
     try {
         const getTasks = await Task.find();
         return Response.json({success: true, message: "Task Fetched", tasks: getTasks})

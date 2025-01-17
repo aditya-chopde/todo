@@ -1,9 +1,11 @@
+import { connectDB } from "@/lib/connectDb";
 import { Task } from "@/lib/models/Task";
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  await connectDB()
   try {
     const id = (await params).id;
     const findSingleTask = await Task.findById(id);
