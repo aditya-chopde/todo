@@ -1,5 +1,5 @@
 import { connectDB } from "@/lib/connectDb";
-import { Task } from "@/lib/models/Task";
+import { Task } from "../../../../lib/models/Task";
 
 export async function POST(req:Request, {params}: {params: Promise<{id: string}>}) {
     await connectDB()
