@@ -1,5 +1,5 @@
+import Task from "@/lib/models/Task";
 import { connectDB } from "@/lib/connectDb";
-import { Task } from "../../../../lib/models/Task";
 
 export async function GET(
   req: Request,
