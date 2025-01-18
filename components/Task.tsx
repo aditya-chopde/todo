@@ -16,12 +16,15 @@ interface Task{
 }
 
 const Task: React.FC<TaskProp> = ({data, getTasks}) => {
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDeleteTask = async (id: string)=>{
     try {
+      setIsDeleting(true)
       await axios.post(`./api/delete/${id}`).then((res)=>{
         toast.success(res.data.message)
         getTasks()
+        setIsDeleting(false)
       })
     } catch (error) {
       if(error instanceof Error){
@@ -77,7 +80,7 @@ const Task: React.FC<TaskProp> = ({data, getTasks}) => {
                 <p className={`text-center px-2 py-1 rounded-full ${item.status ? "bg-green-500 text-white" : "bg-[#a6a6a6] text-black"}`}>{item.status ? "Done" : "Not Done"}</p>
               </td>
               <td className="px-6 py-4 flex gap-3">
-                <button className="bg-red-500 rounded-sm text-white px-2 py-1"
+                <button disabled={isDeleting} className={`bg-red-600 rounded-sm text-white px-2 py-1 ${isDeleting?"cursor-not-allowed":"cursor-pointer"}`}
                 onClick={()=> handleDeleteTask(item._id)}
                 >Delete</button>
                 <button className="bg-yellow-500 rounded-sm text-white px-2 py-1">Edit</button>
