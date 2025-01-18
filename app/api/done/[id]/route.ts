@@ -5,11 +5,12 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  await connectDB()
+  await connectDB();
   try {
     const id = (await params).id;
+    const checkStatus = await Task.findById(id);
     const updateTask = await Task.findByIdAndUpdate(id, {
-      status: true
+      status: true,
     });
     return Response.json({
       success: true,
@@ -17,10 +18,17 @@ export async function POST(
       task: updateTask,
     });
   } catch (error) {
-    if(error instanceof Error){
-        return Response.json({success: true, message: "Error Occurred", error: error.message});
-    }else{
-        return Response.json({success: false, message: "Unknown Error Occurred"})
+    if (error instanceof Error) {
+      return Response.json({
+        success: true,
+        message: "Error Occurred",
+        error: error.message,
+      });
+    } else {
+      return Response.json({
+        success: false,
+        message: "Unknown Error Occurred",
+      });
     }
   }
 }
