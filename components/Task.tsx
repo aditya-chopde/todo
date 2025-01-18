@@ -1,6 +1,12 @@
 "use client"
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+
+interface TaskProp{
+  data: Task[],
+  getTasks: ()=> Promise<void>
+}
 
 interface Task{
   _id: string,
@@ -9,20 +15,34 @@ interface Task{
   status: boolean,
 }
 
-const Task = () => {
-  const [data, setData] = useState<Task[]>([])
+const Task: React.FC<TaskProp> = ({data, getTasks}) => {
 
-  async function handleGetTasks(){
-    await axios.get("./api/get").then((res)=>{
-      setData(res.data.tasks)
-    })
+  const handleDeleteTask = async (id: string)=>{
+    try {
+      await axios.post(`./api/delete/${id}`).then((res)=>{
+        toast.success(res.data.message)
+        getTasks()
+      })
+    } catch (error) {
+      if(error instanceof Error){
+        toast.error("Erro Occurred: "+ error.message)
+      }else{
+        toast.error("Unknown Error Occurred")
+      }
+    }
   }
 
-  useEffect(()=> {
-    handleGetTasks()
-  }, [])
+  if(!data){
+    return (
+      <div>
+        No Tasks
+      </div>
+    )
+  }
+
   return (
     <div>
+      <ToastContainer theme="dark"/>
       <div className="relative overflow-x-auto w-[750px] mx-auto my-10">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -57,7 +77,9 @@ const Task = () => {
                 <p className={`text-center px-2 py-1 rounded-full ${item.status ? "bg-green-500 text-white" : "bg-[#a6a6a6] text-black"}`}>{item.status ? "Done" : "Not Done"}</p>
               </td>
               <td className="px-6 py-4 flex gap-3">
-                <button className="bg-red-500 rounded-sm text-white px-2 py-1">Delete</button>
+                <button className="bg-red-500 rounded-sm text-white px-2 py-1"
+                onClick={()=> handleDeleteTask(item._id)}
+                >Delete</button>
                 <button className="bg-yellow-500 rounded-sm text-white px-2 py-1">Edit</button>
                 <button className="bg-green-500 rounded-sm text-white px-2 py-1">Marks as Done</button>
               </td>

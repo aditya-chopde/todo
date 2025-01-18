@@ -1,28 +1,66 @@
 "use client";
 import React, { FormEvent, useEffect, useState } from "react";
 import Task from "./Task";
+import { toast } from "react-toastify";
 import axios from "axios";
+
+interface TaskInterface {
+  _id: string;
+  title: string;
+  description: string;
+  status: boolean;
+}
 
 const EnterTask = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [data, setData] = useState<TaskInterface[]>([]);
 
-  async function handleCreateTask(e: FormEvent){
-    e.preventDefault()
-    const formData: {title: string, description: string} = {
-      title, 
-      description,
+  async function handleGetTasks() {
+    try {
+      await axios.get("./api/get").then((res) => {
+        const tasks = res.data.tasks || [];
+        setData(tasks.reverse());
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Erro Occurred: " + error.message);
+      } else {
+        toast.error("Unknown Error Occurred");
+      }
     }
-    await axios.post("./api/create", formData, {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    }).then((res)=>{
-      console.log(res.data)
-    });
+  }
+
+  async function handleCreateTask(e: FormEvent) {
+    try {
+      e.preventDefault();
+      const formData: { title: string; description: string } = {
+        title,
+        description,
+      };
+      await axios
+        .post("./api/create", formData, {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        })
+        .then((res) => {
+          setTitle("");
+          setDescription("");
+          handleGetTasks();
+          toast.success(res.data.message)
+        });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Erro Occurred: " + error.message);
+      } else {
+        toast.error("Unknown Error Occurred");
+      }
+    }
   }
 
   useEffect(() => {
     setIsLoaded(true);
+    handleGetTasks();
   }, []);
 
   if (!isLoaded) {
@@ -33,8 +71,8 @@ const EnterTask = () => {
       <form className="max-w-md mx-auto my-10" onSubmit={handleCreateTask}>
         <div className="relative z-0 w-full mb-5 group">
           <input
-          value={title}
-          onChange={(e)=> setTitle(e.target.value)}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             type="text"
             name="floating_email"
             id="floating_email"
@@ -51,8 +89,8 @@ const EnterTask = () => {
         </div>
         <div className="relative z-0 w-full mb-5 group">
           <input
-          value={description}
-          onChange={(e)=> setDescription(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             type="text"
             name="floating_password"
             id="floating_password"
@@ -74,7 +112,7 @@ const EnterTask = () => {
           Add
         </button>
       </form>
-      <Task/>
+      <Task data={data||[]} getTasks={handleGetTasks} />
     </>
   );
 };
