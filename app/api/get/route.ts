@@ -1,3 +1,4 @@
+"use server"
 import Task from "../../../lib/models/Task";
 import { connectDB } from "@/lib/connectDb";
 
