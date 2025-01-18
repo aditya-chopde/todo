@@ -1,6 +1,7 @@
 "use client"
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import React, { useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 
 interface TaskProp{
@@ -83,7 +84,7 @@ const Task: React.FC<TaskProp> = ({data, getTasks}) => {
                 <button disabled={isDeleting} className={`bg-red-600 rounded-sm text-white px-2 py-1 ${isDeleting?"cursor-not-allowed":"cursor-pointer"}`}
                 onClick={()=> handleDeleteTask(item._id)}
                 >Delete</button>
-                <button className="bg-yellow-500 rounded-sm text-white px-2 py-1">Edit</button>
+                <button className="bg-yellow-500 rounded-sm text-white px-2 py-1"><Link href={`/edit/${item._id}`}>Edit</Link></button>
                 <button className="bg-green-500 rounded-sm text-white px-2 py-1">Marks as Done</button>
               </td>
             </tr>
