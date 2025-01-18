@@ -1,3 +1,4 @@
+import { svgs } from "@/public/svgs";
 import Link from "next/link";
 import React from "react";
 
@@ -11,7 +12,7 @@ const Navbar = () => {
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
             <img
-              src="https://flowbite.com/docs/images/logo.svg"
+              src="logo-final.png"
               className="h-8"
               alt="Flowbite Logo"
             />
@@ -37,8 +38,8 @@ const Navbar = () => {
               <path
                 stroke="currentColor"
                 strokeLinecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M1 1h15M1 7h15M1 13h15"
               />
             </svg>
