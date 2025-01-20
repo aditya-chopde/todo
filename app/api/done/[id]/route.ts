@@ -1,5 +1,5 @@
 "use server"
-import Task from "../../../../lib/models/Task";
+import Task from "../../../../lib/Task";
 import { connectDB } from "@/lib/connectDb";
 
 export async function POST(
