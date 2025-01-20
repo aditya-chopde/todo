@@ -10,7 +10,7 @@ export async function GET(
   try {
     const id = (await params).id;
     const findSingleTask = await Task.findById(id);
-    return Response.json({
+    return Response.json({ 
       success: true,
       message: "Task Fetched",
       task: findSingleTask,
