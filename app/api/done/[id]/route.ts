@@ -9,7 +9,6 @@ export async function POST(
   await connectDB();
   try {
     const id = (await params).id;
-    const checkStatus = await Task.findById(id);
     const updateTask = await Task.findByIdAndUpdate(id, {
       status: true,
     });

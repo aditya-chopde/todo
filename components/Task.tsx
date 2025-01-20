@@ -44,7 +44,13 @@ const Task: React.FC<TaskProp> = ({ data, getTasks }) => {
         toast.success(res.data.message);
         getTasks()
       });
-    } catch (error) {}
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Erro Occurred: " + error.message);
+      } else {
+        toast.error("Unknown Error Occurred");
+      }
+    }
   }
 
   if (!data) {

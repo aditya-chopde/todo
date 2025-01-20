@@ -1,4 +1,3 @@
-import { svgs } from "@/public/svgs";
 import Link from "next/link";
 import React from "react";
 
